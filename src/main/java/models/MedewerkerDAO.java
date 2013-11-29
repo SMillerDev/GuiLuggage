@@ -18,14 +18,14 @@ import java.util.List;
  * @author ChrisvanderHeijden
  */
 public class MedewerkerDAO {
-    private Medewerker tempMedewerker = null;
+    //private Medewerker tempMedewerker = null;
     ConnectionMySQL conn = new ConnectionMySQL();
-    PreparedStatement ps = null;
-    ResultSet rs = null;
+   // PreparedStatement ps = null;
+ //   ResultSet rs = null;
     
-    private String user = "seanmoy58_hva";
-    private String pw = "cWCl7Itb";
-    private String url = "jdbc:mysql://seanmoy58.fiftyeight.axc.nl:3306/seanmoy58_hva?zeroDateTimeBehavior=convertToNull";
+//    private String user = "seanmoy58_hva";
+//    private String pw = "cWCl7Itb";
+//    private String url = "jdbc:mysql://seanmoy58.fiftyeight.axc.nl:3306/seanmoy58_hva?zeroDateTimeBehavior=convertToNull";
 
     public MedewerkerDAO() {
         // initialization 
@@ -36,7 +36,7 @@ public class MedewerkerDAO {
         ResultSet rs = null;
         PreparedStatement prdstmt = null;
 
-        String query = "SELECT ID,NAME, STREETADDRESS, CITY FROM CUSTOMER";
+        String query = "SELECT userName,userRealName, userPass, userBeheer FROM Users";
 
         conn.startConnection();
 
@@ -44,12 +44,12 @@ public class MedewerkerDAO {
         rs = conn.performSelect(prdstmt);
 
         while (rs.next()) {
-            Medewerker tempMedewerker;
-//            tempMedewerker.setName(rs.getString("name"));
-         //   tempMedewerker.setUsername(rs.getString("username"));
-        //    tempMedewerker.setPassword(rs.DigestUtils.sha1Hex(String.valueOf("password")));
-   //         tempMedewerker.setAppManager(rs.getBoolean("appManager"));
-       //     list.add(tempMedewerker);
+            Medewerker tempMedewerker = new Medewerker();
+            tempMedewerker.setName(rs.getString("name"));
+            tempMedewerker.setUsername(rs.getString("username"));
+//            tempMedewerker.setPassword(rs.DigestUtils.sha1Hex(String.valueOf("password")));
+            tempMedewerker.setAppManager(rs.getBoolean("appManager"));
+            list.add(tempMedewerker);
         }
 
         if (conn != null) {
@@ -59,51 +59,53 @@ public class MedewerkerDAO {
         return list;
     }
 
-    public Medewerker readById(int id) throws SQLException {
-        ResultSet rs = null;
-        PreparedStatement prdstmt = null;
-
-        String query = "SELECT ID,NAME, STREETADDRESS, CITY FROM CUSTOMER WHERE ID=?";
-
-        conn.startConnection();
-
-        prdstmt = conn.getConnection().prepareStatement(query);
-        prdstmt.setInt(1, id);
-
-        rs = conn.performSelect(prdstmt);
-
-
-        if (rs.next()) {
-            
-            tempMedewerker.setName(rs.getString("name"));
-            tempMedewerker.setUsername(rs.getString("username"));
-            tempMedewerker.setPassword(rs.getString("password"));
-            tempMedewerker.setAppManager(rs.getBoolean("AppManager"));
-        } else {
-            return null;
-        }
-
-        if (conn != null) {
-            conn.closeConnection();
-        }
-
-
-        return tempMedewerker;
-    }
+////    public Medewerker readById(int id) throws SQLException {
+//        ResultSet rs = null;
+//        PreparedStatement prdstmt = null;
+//
+//        String query = "SELECT ID,NAME, STREETADDRESS, CITY FROM CUSTOMER WHERE ID=?";
+//
+//        conn.startConnection();
+//
+//        prdstmt = conn.getConnection().prepareStatement(query);
+//        prdstmt.setInt(1, id);
+//
+//        rs = conn.performSelect(prdstmt);
+//
+//
+//        if (rs.next()) {
+//            
+////            tempMedewerker.setName(rs.getString("name"));
+//     //       tempMedewerker.setUsername(rs.getString("username"));
+//     //       tempMedewerker.setPassword(rs.getString("password"));
+//     //       tempMedewerker.setAppManager(rs.getBoolean("AppManager"));
+//        } else {
+//            return null;
+//        }
+//
+//        if (conn != null) {
+//            conn.closeConnection();
+//        }
+//
+//
+//      //  return tempMedewerker;
+//    }
 
     public int create(Medewerker medewerker) throws SQLException {
+        PreparedStatement prdstmt = null;
         String query = "INSERT INTO `Users`  ( `userName`, `userRealName`, `userPass`, `userBeheer`, `userLang`) VALUES(?,?,?,?, NULL);";
         
         conn.startConnection();
-        conn = (ConnectionMySQL) DriverManager.getConnection(url, user, pw);
+      //  conn = (ConnectionMySQL) DriverManager.getConnection(url, user, pw);
+       prdstmt = conn.getConnection().prepareStatement(query);
         // some code needs to be writing
         //ps = conn.prepareStatement(query);
-        ps.setString(1, medewerker.getUsername());
-        ps.setString(2, medewerker.getName());
-        ps.setString(3, medewerker.getPassword());
-        ps.setBoolean(4,medewerker.isAppManager());
+        prdstmt.setString(1, medewerker.getUsername());
+        prdstmt.setString(2, medewerker.getName());
+        prdstmt.setString(3, medewerker.getPassword());
+        prdstmt.setBoolean(4,medewerker.isAppManager());
         //preparedStmt.setString(5, medewerker.getUserLang());
-        ps.executeQuery();
+        prdstmt.executeUpdate();
 
         if (conn != null) {
             conn.closeConnection();
