@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 package models;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import DBUtil.ConnectionMySQL;
 import java.sql.DriverManager;
@@ -45,10 +44,10 @@ public class MedewerkerDAO {
 
         while (rs.next()) {
             Medewerker tempMedewerker = new Medewerker();
-            tempMedewerker.setName(rs.getString("name"));
-            tempMedewerker.setUsername(rs.getString("username"));
-//            tempMedewerker.setPassword(rs.DigestUtils.sha1Hex(String.valueOf("password")));
-            tempMedewerker.setAppManager(rs.getBoolean("appManager"));
+            tempMedewerker.setName(rs.getString("userRealName"));
+            tempMedewerker.setUsername(rs.getString("userName"));
+            tempMedewerker.setPassword(rs.getString("userPass"));
+            tempMedewerker.setAppManager(rs.getBoolean("userBeheer"));
             list.add(tempMedewerker);
         }
 
